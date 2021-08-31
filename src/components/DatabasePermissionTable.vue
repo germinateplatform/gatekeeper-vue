@@ -10,9 +10,9 @@
               @click="deleteUserPermission(props.row, $event)">
       <DeleteIcon class="form-icon" />
     </b-button>
-    <b-form-select slot="userType"
+    <b-form-select slot="userTypeId"
                   slot-scope="props"
-                  :value="props.row.userType"
+                  :value="props.row.userTypeId"
                   :options="userTypeOptions"
                   @change="setUserType(props.row, $event)" />
   </v-server-table>
@@ -26,7 +26,7 @@ export default {
   extends: I18nTable,
   data: function () {
     return {
-      columns: ['username', 'userType', 'delete'],
+      columns: ['username', 'userTypeId', 'delete'],
       options: {
         requestFunction: function (data) {
           var vm = this
@@ -40,16 +40,28 @@ export default {
         perPage: 10,
         headings: {
           username: () => this.$t('tableColumnUsername'),
-          userType: () => this.$t('tableColumnUserType'),
+          userTypeId: () => this.$t('tableColumnUserType'),
           delete: () => this.$t('actionDelete')
         },
         columnsClasses: {
           delete: 'py-0 align-middle'
         },
-        sortable: ['username', 'userType'],
-        filterable: ['username', 'userType']
+        sortable: ['username', 'userTypeId'],
+        filterable: ['username', 'userTypeId']
       },
-      userTypeOptions: ['Administrator', 'Data Curator', 'Regular User', 'Suspended User']
+      userTypeOptions: [{
+        text: 'Administrator',
+        value: 1
+      }, {
+        text: 'Data Curator',
+        value: 4
+      }, {
+        text: 'Regular User',
+        value: 2
+      }, {
+        text: 'Suspended User',
+        value: 3
+      }]
     }
   },
   props: {
@@ -66,11 +78,10 @@ export default {
       this.$refs.table.refresh()
     },
     setUserType: function (row, event) {
-      var vm = this
-      row.userType = event
-      row.userTypeId = this.userTypeOptions.indexOf(event) + 1
-      this.apiPatchUserPermission(row, function (result) {
-        vm.refresh()
+      row.userType = this.userTypeOptions.filter(t => t.value === event)[0].text
+      row.userTypeId = event
+      this.apiPatchUserPermission(row, result => {
+        this.refresh()
       })
     },
     deleteUserPermission: function (row, event) {

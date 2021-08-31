@@ -79,11 +79,10 @@ export default {
       this.$refs.table.refresh()
     },
     setUserType: function (row, event) {
-      var vm = this
       row.userType = this.userTypeOptions.filter(t => t.value === event)[0].text
       row.userTypeId = event
-      this.apiPatchUserPermission(row, function (result) {
-        vm.refresh()
+      this.apiPatchUserPermission(row, result => {
+        this.refresh()
       })
     },
     deleteUserPermission: function (row, event) {

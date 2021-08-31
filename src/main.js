@@ -37,12 +37,18 @@ Vue.use({
     window.moment = Vue.prototype.$moment
   }
 })
-Vue.filter('toDate', function (value) {
-  if (value) {
-    return window.moment(value).format(window.moment.localeData().longDateFormat('L'))
-  } else {
-    return ''
+// Date formatting
+Vue.filter('toDate', value => {
+  if (value === null || value === undefined) {
+    return null
   }
+  let moment
+  if (value.indexOf('-') !== -1) {
+    moment = window.moment(value)
+  } else {
+    moment = window.moment(value, 'MMM D, YYYY')
+  }
+  return moment.format(i18n.t('formatDate'))
 })
 
 // Set base URL

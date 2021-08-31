@@ -13,6 +13,14 @@
               <dt>{{ $t('tableColumnFullName') }}</dt><dd>{{ user.fullName }}</dd>
               <dt>{{ $t('tableColumnEmail') }}</dt><dd>{{ user.emailAddress }}</dd>
               <dt>{{ $t('tableColumnInstitute') }}</dt><dd>{{ getInstitution() }}</dd>
+              <dt>{{ $t('tableColumnLastLogin') }}</dt><dd>
+                <template v-if="user.lastLogin">
+                  {{ user.lastLogin | toDate }}
+                </template>
+                <template v-else>
+                  --
+                </template>
+              </dd>
             </dl>
           </b-card>
         </b-col>
@@ -88,8 +96,7 @@
                       <PencilIcon class="form-icon" />
                     </b-input-group-prepend>
                     <b-form-input  v-model="newPermission.description"
-                                   :placeholder="$t('formLabelDescription')"
-                                   required />
+                                   :placeholder="$t('formLabelDescription')" />
                   </b-input-group>
                   <b-input-group class="mt-3">
                     <b-input-group-prepend is-text>
@@ -130,9 +137,21 @@ export default {
         database: null,
         server: null,
         description: null,
-        userType: 'Regular User'
+        userType: 2
       },
-      userTypeOptions: ['Administrator', 'Data Curator', 'Regular User', 'Suspended User']
+      userTypeOptions: [{
+        value: 1,
+        text: 'Administrator'
+      }, {
+        value: 4,
+        text: 'Data Curator'
+      }, {
+        value: 2,
+        text: 'Regular User'
+      }, {
+        value: 3,
+        text: 'Suspended User'
+      }]
     }
   },
   components: {
@@ -178,16 +197,8 @@ export default {
         database: null,
         server: null,
         description: null,
-        userType: 'Regular User'
+        userType: 2
       }
-    },
-    setUserType: function (row, event) {
-      var vm = this
-      row.userType = event
-      row.userTypeId = this.userTypeOptions.indexOf(event) + 1
-      this.apiPatchUserPermission(row, function (result) {
-        vm.$refs.permissionsTable.refresh()
-      })
     },
     onDeleteUserClicked: function () {
       var vm = this
@@ -225,7 +236,7 @@ export default {
             var toSend = {
               userId: vm.user.id,
               databaseId: result,
-              userTypeId: vm.userTypeOptions.indexOf(vm.newPermission.userType) + 1
+              userTypeId: vm.newPermission.userType
             }
 
             EventBus.$emit('stats-count-changed')
@@ -244,7 +255,7 @@ export default {
         var toSend = {
           userId: this.user.id,
           databaseId: this.newPermission.database,
-          userTypeId: this.userTypeOptions.indexOf(this.newPermission.userType) + 1
+          userTypeId: this.newPermission.userType
         }
 
         this.apiPostUserPermission(toSend, function (result) {
