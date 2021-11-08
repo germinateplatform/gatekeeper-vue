@@ -7,6 +7,8 @@
 ![GitHub](https://img.shields.io/github/license/germinateplatform/gatekeeper-vue)
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/germinateplatform/gatekeeper-vue)
 ![GitHub last commit](https://img.shields.io/github/last-commit/germinateplatform/gatekeeper-vue)
+[![Docker CI Push](https://github.com/germinateplatform/gatekeeper-vue/actions/workflows/docker-ci-push.yml/badge.svg)](https://github.com/germinateplatform/gatekeeper-vue/actions/workflows/docker-ci-push.yml)
+[![Docker CI Tag](https://github.com/germinateplatform/gatekeeper-vue/actions/workflows/docker-ci-tag.yml/badge.svg)](https://github.com/germinateplatform/gatekeeper-vue/actions/workflows/docker-ci-tag.yml)
 
 Gatekeeper is <a href="https://github.com/germinateplatform/germinate-vue">Germinate's</a> user management system. It regulates access to Germinate and allows administrators to create new users and assign permissions.
 
