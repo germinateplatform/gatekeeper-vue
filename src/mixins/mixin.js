@@ -2,6 +2,11 @@ import axios from 'axios'
 import store from '../store/store'
 
 export default {
+  data: function () {
+    return {
+      MAX_JAVA_INTEGER: 2147483647
+    }
+  },
   methods: {
     getBaseUrl () {
       return store.getters.baseUrl

@@ -267,7 +267,7 @@ export default {
   },
   mounted: function () {
     var vm = this
-    this.apiGetDatabases({ page: 1, limit: Number.MAX_SAFE_INTEGER }, function (result) {
+    this.apiGetDatabases({ page: 1, limit: this.MAX_JAVA_INTEGER }, function (result) {
       if (result && result.data) {
         result.data.forEach(function (d) {
           d.text = d.serverName + ' -> ' + d.systemName

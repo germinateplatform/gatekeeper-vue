@@ -1,6 +1,11 @@
 import store from '../store/store'
 
 export default {
+  data: function () {
+    return {
+      MAX_JAVA_INTEGER: 2147483647
+    }
+  },
   methods: {
     // TOKEN
 
@@ -125,7 +130,7 @@ export default {
     apiGetInstitutions: function (onSuccess, onError) {
       var data = {
         page: 0,
-        limit: Number.MAX_SAFE_INTEGER
+        limit: this.MAX_JAVA_INTEGER
       }
       return this.authAjax({ url: 'institution', method: 'GET', data: data, success: onSuccess, error: onError })
     },
