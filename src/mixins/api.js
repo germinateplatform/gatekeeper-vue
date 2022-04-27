@@ -43,8 +43,9 @@ export default {
       return this.authAjax({ url: 'stat/count', method: 'GET', success: onSuccess, error: onError })
     },
     // REQUESTS
-    apiGetNewRequests: function (onSuccess, onError) {
-      return this.authAjax({ url: 'request/new', method: 'GET', success: onSuccess, error: onError })
+    apiGetNewRequests: function (queryData, onSuccess, onError) {
+      queryData.page -= 1
+      return this.authAjax({ url: 'request/new', method: 'GET', data: queryData, success: onSuccess, error: onError })
     },
     apiPostDecisionNewRequests: function (requestId, decision, onSuccess, onError) {
       return this.authAjax({ url: 'request/new/' + requestId + '/decision', method: 'POST', data: decision, success: onSuccess, error: onError })
@@ -52,8 +53,9 @@ export default {
     apiDeleteRequestNew: function (requestId, onSuccess, onError) {
       return this.authAjax({ url: 'request/new/' + requestId, method: 'DELETE', success: onSuccess, error: onError })
     },
-    apiGetExistingRequests: function (onSuccess, onError) {
-      return this.authAjax({ url: 'request/existing', method: 'GET', success: onSuccess, error: onError })
+    apiGetExistingRequests: function (queryData, onSuccess, onError) {
+      queryData.page -= 1
+      return this.authAjax({ url: 'request/existing', method: 'GET', data: queryData, success: onSuccess, error: onError })
     },
     apiPostDecisionExistingRequests: function (requestId, decision, onSuccess, onError) {
       decision['locale'] = store.getters.locale
@@ -111,7 +113,7 @@ export default {
     // PERMISSIONS
     apiGetUserPermissions: function (userId, queryData, onSuccess, onError) {
       queryData.page -= 1
-      return this.authAjax({ url: 'user/' + userId + '/permission', method: 'GET', data: queryData, success: onSuccess, error: onError })
+      return this.authAjax({ url: `user/${userId}/permission`, method: 'GET', data: queryData, success: onSuccess, error: onError })
     },
     apiGetDatabasePermissions: function (databaseId, queryData, onSuccess, onError) {
       queryData.page -= 1

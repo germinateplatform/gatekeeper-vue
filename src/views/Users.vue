@@ -15,7 +15,7 @@
               <dt>{{ $t('tableColumnInstitute') }}</dt><dd>{{ getInstitution() }}</dd>
               <dt>{{ $t('tableColumnLastLogin') }}</dt><dd>
                 <template v-if="user.lastLogin">
-                  {{ user.lastLogin | toDate }}
+                  {{ new Date(user.lastLogin).toLocaleString() }}
                 </template>
                 <template v-else>
                   --

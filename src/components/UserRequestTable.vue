@@ -1,45 +1,44 @@
 <template>
   <div>
-    <v-client-table :data="data"
-                    :columns="columns"
-                    :options="options"
-                    ref="table" >
-      <span slot="createdOn"
-            slot-scope="props">
-        {{ props.row.createdOn | toDate }}
-      </span>
-      <div slot="activationKey" slot-scope="props">
-        <span v-b-tooltip:hover :title="$t('tooltipEmailActivationAwaiting')" v-if="props.row.activationKey && props.row.activationKey.length > 0">
-          <TimerSandIcon class="text-danger" />
+    <BaseTable :columns="columns" :getData="getData" sortBy="createdOn" :sortDesc="true" :supportsSearch="true" ref="table">
+      <template v-slot:cell(createdOn)="data">
+        <span v-if="data.item.createdOn">{{ new Date(data.item.createdOn).toLocaleString() }}</span>
+      </template>
+      <template v-slot:cell(activationKey)="data">
+        <span v-b-tooltip:hover :title="$t('tooltipEmailActivationAwaiting')" v-if="data.item.activationKey && data.item.activationKey.length > 0" class="text-danger">
+          <MdiIcon :path="mdiTimerSand" />
         </span>
-        <span v-b-tooltip:hover :title="$t('tooltipEmailActivationSuccessful')" v-else>
-          <EmailCheckOutlineIcon class="text-success" />
+        <span v-b-tooltip:hover :title="$t('tooltipEmailActivationSuccessful')" v-else class="text-success">
+          <MdiIcon :path="mdiEmailCheckOutline" />
         </span>
-      </div>
-      <b-button-group slot="actions" slot-scope="props">
-        <b-button size="sm"
-                  v-b-tooltip.hover
-                  variant="secondary"
-                  :title="$t('actionDelete')"
-                  @click="onAction('delete', props.row)">
-          <DeleteIcon :title="$t('actionDelete')" />
-        </b-button>
-        <b-button size="sm"
-                  v-b-tooltip.hover
-                  variant="danger"
-                  :title="$t('actionReject')"
-                  @click="onAction('reject', props.row)">
-          <ThumbDownIcon :title="$t('actionReject')" />
-        </b-button>
-        <b-button size="sm"
-                  v-b-tooltip.hover
-                  variant="success"
-                  :title="$t('actionAccept')"
-                  @click="onAction('approve', props.row)">
-          <ThumbUpIcon :title="$t('actionAccept')" />
-        </b-button>
-      </b-button-group>
-    </v-client-table>
+      </template>
+      <template v-slot:cell(actions)="data">
+        <b-button-group>
+          <b-button size="sm"
+                    v-b-tooltip.hover
+                    variant="secondary"
+                    :title="$t('actionDelete')"
+                    @click="onAction('delete', data.item)">
+            <MdiIcon :path="mdiDelete" />
+          </b-button>
+          <b-button size="sm"
+                    v-b-tooltip.hover
+                    variant="danger"
+                    :title="$t('actionReject')"
+                    @click="onAction('reject', data.item)">
+            <MdiIcon :path="mdiThumbDown" />
+          </b-button>
+          <b-button size="sm"
+                    v-b-tooltip.hover
+                    variant="success"
+                    :title="$t('actionAccept')"
+                    @click="onAction('approve', data.item)">
+            <MdiIcon :path="mdiThumbUp" />
+          </b-button>
+        </b-button-group>
+      </template>
+    </BaseTable>
+
     <b-modal ref="feedbackModal" @ok="onReject(null)" :ok-title="$t('actionReject')" ok-variant="danger" :cancel-title="$t('actionCancel')" :title="$t('modalTitleRejection')" v-if="currentRow">
       <b-form @submit.prevent="onReject(null)">
         <b-textarea rows="5" :placeholder="$t('modalTextRejection')" v-model="rejectionReason" />
@@ -49,48 +48,82 @@
 </template>
 
 <script>
-import DeleteIcon from 'vue-material-design-icons/Delete'
-import ThumbDownIcon from 'vue-material-design-icons/ThumbDown'
-import ThumbUpIcon from 'vue-material-design-icons/ThumbUp'
-import EmailCheckOutlineIcon from 'vue-material-design-icons/EmailCheckOutline'
-import TimerSandIcon from 'vue-material-design-icons/TimerSand'
-import I18nTable from './I18nTable'
+import BaseTable from '@/components/BaseTable'
+import MdiIcon from '@/components/MdiIcon'
 import { EventBus } from '../event-bus.js'
 
+import { mdiTimerSand, mdiEmailCheckOutline, mdiDelete, mdiThumbDown, mdiThumbUp } from '@mdi/js'
+
 export default {
-  extends: I18nTable,
   data: function () {
     return {
-      columns: ['username', 'fullName', 'emailAddress', 'name', 'acronym', 'address', 'databaseSystemName', 'databaseServerName', 'activationKey', 'createdOn', 'actions'],
-      options: {
-        perPage: 10,
-        headings: {
-          username: () => this.$t('tableColumnUsername'),
-          fullName: () => this.$t('tableColumnFullName'),
-          emailAddress: () => this.$t('tableColumnEmail'),
-          name: () => this.$t('tableColumnInstituteName'),
-          acronym: () => this.$t('tableColumnInstituteAcronym'),
-          address: () => this.$t('tableColumnInstituteAddress'),
-          databaseSystemName: () => this.$t('tableColumnRequestsAccessTo'),
-          databaseServerName: () => this.$t('tableColumnRequestsOnServer'),
-          activationKey: () => this.$t('tableColumnRequestsActivationKey'),
-          createdOn: this.$t('tableColumnRequestsOnDate'),
-          actions: ''
-        },
-        columnsClasses: {
-          actions: 'py-0 align-middle'
-        },
-        sortable: ['username', 'fullName', 'emailAddress', 'name', 'acronym', 'address', 'databaseSystemName', 'databaseServerName', 'activationKey', 'createdOn'],
-        filterable: ['username', 'fullName', 'emailAddress', 'name', 'acronym', 'address', 'databaseSystemName', 'databaseServerName', 'activationKey', 'createdOn']
-      },
+      mdiTimerSand,
+      mdiEmailCheckOutline,
+      mdiDelete,
+      mdiThumbDown,
+      mdiThumbUp,
       currentRow: null,
       rejectionReason: null
     }
   },
+  computed: {
+    columns: function () {
+      return [{
+        key: 'username',
+        label: this.$t('tableColumnUsername'),
+        sortable: true
+      }, {
+        key: 'fullName',
+        label: this.$t('tableColumnFullName'),
+        sortable: true
+      }, {
+        key: 'emailAddress',
+        label: this.$t('tableColumnEmail'),
+        sortable: true
+      }, {
+        key: 'name',
+        label: this.$t('tableColumnInstituteName'),
+        sortable: true
+      }, {
+        key: 'acronym',
+        label: this.$t('tableColumnInstituteAcronym'),
+        sortable: true
+      }, {
+        key: 'address',
+        label: this.$t('tableColumnInstituteAddress'),
+        sortable: true
+      }, {
+        key: 'databaseSystemName',
+        label: this.$t('tableColumnRequestsAccessTo'),
+        sortable: true
+      }, {
+        key: 'databaseServerName',
+        label: this.$t('tableColumnRequestsOnServer'),
+        sortable: true
+      }, {
+        key: 'activationKey',
+        label: this.$t('tableColumnRequestsActivationKey'),
+        sortable: true
+      }, {
+        key: 'createdOn',
+        label: this.$t('tableColumnRequestsOnDate'),
+        sortable: true
+      }, {
+        key: 'actions',
+        label: '',
+        sortable: false
+      }]
+    }
+  },
   props: {
-    data: {
-      type: Array,
-      required: true
+    getData: {
+      type: Function,
+      default: () => {
+        return {
+          data: [],
+          count: 0
+        }
+      }
     },
     requestType: {
       type: String,
@@ -99,11 +132,8 @@ export default {
     }
   },
   components: {
-    DeleteIcon,
-    EmailCheckOutlineIcon,
-    ThumbDownIcon,
-    ThumbUpIcon,
-    TimerSandIcon
+    BaseTable,
+    MdiIcon
   },
   methods: {
     onAction: function (decision, row) {
@@ -190,7 +220,7 @@ export default {
     },
     refresh: function () {
       EventBus.$emit('stats-count-changed')
-      this.$emit('request-data')
+      this.$refs.table.refresh()
     }
   }
 }

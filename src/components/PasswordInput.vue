@@ -28,6 +28,7 @@
 
 <script>
 import KeyPlusIcon from 'vue-material-design-icons/KeyPlus.vue'
+const zxcvbn = require('zxcvbn')
 
 export default {
   data: function () {
@@ -46,7 +47,7 @@ export default {
   },
   methods: {
     updateScore: function () {
-      this.score = this.$zxcvbn(this.password).score
+      this.score = zxcvbn(this.password).score
 
       switch (this.score) {
         case 0:

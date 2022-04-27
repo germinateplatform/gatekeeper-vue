@@ -1,55 +1,31 @@
 <template>
-  <v-server-table ref="table"
-                  :url="'' + user.id"
-                  :columns=columns
-                  :options=options>
-    <b-button variant="danger"
-              slot="delete"
-              slot-scope="props"
+  <BaseTable :columns="columns" :getData="getData" ref="table">
+    <template v-slot:cell(delete)="data">
+      <b-button variant="danger"
               size="sm"
-              @click="deleteUserPermission(props.row, $event)">
-      <DeleteIcon class="form-icon" />
-    </b-button>
-    <b-form-select slot="userTypeId"
-                  slot-scope="props"
-                  :value="props.row.userTypeId"
+              @click="deleteUserPermission(data.item)">
+        <MdiIcon :path="mdiDelete" />
+      </b-button>
+    </template>
+    <template v-slot:cell(userTypeId)="data">
+      <b-form-select
+                  :value="data.item.userTypeId"
                   :options="userTypeOptions"
-                  @change="setUserType(props.row, $event)" />
-  </v-server-table>
+                  @change="setUserType(data.item, $event)" />
+    </template>
+  </BaseTable>
 </template>
 
 <script>
-import DeleteIcon from 'vue-material-design-icons/Delete'
-import I18nTable from './I18nTable'
+import BaseTable from '@/components/BaseTable'
+import MdiIcon from '@/components/MdiIcon'
+
+import { mdiDelete } from '@mdi/js'
 
 export default {
-  extends: I18nTable,
   data: function () {
     return {
-      columns: ['systemName', 'serverName', 'userTypeId', 'delete'],
-      options: {
-        requestFunction: function (data) {
-          var vm = this
-          return this.apiGetUserPermissions(this.url, data, function (result) {
-            vm.dispatch('success', result)
-          })
-        },
-        responseAdapter: function (data) {
-          return data.data
-        },
-        perPage: 10,
-        headings: {
-          systemName: () => this.$t('formLabelDatabase'),
-          serverName: () => this.$t('formLabelServer'),
-          userTypeId: () => this.$t('tableColumnUserType'),
-          delete: () => this.$t('actionDelete')
-        },
-        columnsClasses: {
-          delete: 'py-0 align-middle'
-        },
-        sortable: ['systemName', 'serverName', 'userTypeId'],
-        filterable: ['systemName', 'serverName', 'userTypeId']
-      },
+      mdiDelete,
       userTypeOptions: [{
         text: 'Administrator',
         value: 1
@@ -65,6 +41,31 @@ export default {
       }]
     }
   },
+  computed: {
+    columns: function () {
+      return [{
+        key: 'systemName',
+        label: this.$t('formLabelDatabase'),
+        sortable: true
+      }, {
+        key: 'serverName',
+        label: this.$t('formLabelServer'),
+        sortable: true
+      }, {
+        key: 'username',
+        label: this.$t('tableColumnUsername'),
+        sortable: true
+      }, {
+        key: 'userTypeId',
+        label: this.$t('tableColumnUserType'),
+        sortable: true
+      }, {
+        key: 'delete',
+        label: this.$t('actionDelete'),
+        sortable: false
+      }]
+    }
+  },
   props: {
     user: {
       type: Object,
@@ -72,22 +73,23 @@ export default {
     }
   },
   components: {
-    DeleteIcon
+    BaseTable,
+    MdiIcon
   },
   methods: {
+    getData: function (data, callback) {
+      return this.apiGetUserPermissions(this.user.id, data, callback)
+    },
     refresh: function () {
       this.$refs.table.refresh()
     },
-    setUserType: function (row, event) {
-      row.userType = this.userTypeOptions.filter(t => t.value === event)[0].text
-      row.userTypeId = event
-      this.apiPatchUserPermission(row, result => {
-        this.refresh()
-      })
+    setUserType: function (row, newValue) {
+      const payload = JSON.parse(JSON.stringify(row))
+      payload.userTypeId = newValue
+      payload.userType = this.userTypeOptions.filter(t => t.value === newValue)[0].text
+      this.apiPatchUserPermission(payload, () => this.refresh())
     },
-    deleteUserPermission: function (row, event) {
-      var vm = this
-
+    deleteUserPermission: function (row) {
       this.$bvModal.msgBoxConfirm(this.$t('modalMessageSure'), {
         okTitle: this.$t('genericYes'),
         okVariant: 'danger',
@@ -95,9 +97,7 @@ export default {
       })
         .then(value => {
           if (value) {
-            vm.apiDeleteUserPermission(row, function (result) {
-              vm.refresh()
-            })
+            this.apiDeleteUserPermission(row, () => this.refresh())
           }
         })
     }
