@@ -41,20 +41,6 @@
     "sass-loader": "^12.0.0",
     "vue-template-compiler": "^2.6.14"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
   "postcss": {
     "plugins": {
       "autoprefixer": {}
@@ -64,7 +50,7 @@
     "> 1%",
     "last 2 versions"
   ],
-  "copyright": "Copyright 2019 The James Hutton Institute",
+  "copyright": "Copyright 2022 The James Hutton Institute",
   "homepage": "https://ics.hutton.ac.uk/get-germinate",
   "license": "Apache-2.0",
   "repository": {
