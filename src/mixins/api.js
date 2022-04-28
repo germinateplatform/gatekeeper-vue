@@ -58,14 +58,14 @@ export default {
       return this.authAjax({ url: 'request/existing', method: 'GET', data: queryData, success: onSuccess, error: onError })
     },
     apiPostDecisionExistingRequests: function (requestId, decision, onSuccess, onError) {
-      decision['locale'] = store.getters.locale
+      decision.locale = store.getters.locale
       return this.authAjax({ url: 'request/existing/' + requestId + '/decision', method: 'POST', data: decision, success: onSuccess, error: onError })
     },
     apiDeleteRequestExisting: function (requestId, onSuccess, onError) {
       return this.authAjax({ url: 'request/existing/' + requestId, method: 'DELETE', success: onSuccess, error: onError })
     },
     apiPostActivationRequest: function (activationKey, onSuccess, onError) {
-      var data = {
+      const data = {
         activationKey: activationKey,
         locale: store.getters.locale
       }
@@ -89,14 +89,14 @@ export default {
       return this.authAjax({ url: 'user/' + userId + '/email', method: 'PATCH', data: emailUpdate, success: onSuccess, error: onError })
     },
     apiPatchUserPassword: function (userId, passwordUpdate, onSuccess, onError) {
-      passwordUpdate['locale'] = store.getters.locale
+      passwordUpdate.locale = store.getters.locale
       return this.authAjax({ url: 'user/' + userId + '/password', method: 'PATCH', data: passwordUpdate, success: onSuccess, error: onError })
     },
     apiPatchUserGatekeeperAccess: function (userId, gatekeeperAccess, onSuccess, onError) {
       return this.authAjax({ url: 'user/' + userId + '/gatekeeper', method: 'PATCH', data: gatekeeperAccess, success: onSuccess, error: onError })
     },
     apiPostPasswordReset: function (resetRequest, onSuccess, onError) {
-      resetRequest['locale'] = store.getters.locale
+      resetRequest.locale = store.getters.locale
       return this.authAjax({ url: 'passwordreset', method: 'POST', data: resetRequest, success: onSuccess, error: onError })
     },
     // DATABASES
@@ -130,7 +130,7 @@ export default {
     },
     // INSTITUTIONS
     apiGetInstitutions: function (onSuccess, onError) {
-      var data = {
+      const data = {
         page: 0,
         limit: this.MAX_JAVA_INTEGER
       }

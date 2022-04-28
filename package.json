@@ -3,13 +3,6 @@
   "version": "4.2.1",
   "description": "",
   "author": "Sebastian Raubach",
-  "homepage": "https://ics.hutton.ac.uk/get-germinate",
-  "copyright": "Copyright 2019 The James Hutton Institute",
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/germinateplatform/gatekeeper-vue.git"
-  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -20,27 +13,33 @@
     "axios": "^0.26.1",
     "bootstrap": "^4.6.1",
     "bootstrap-vue": "^2.22.0",
-    "core-js": "~2.6.5",
-    "vue": "~2.6.10",
+    "bootswatch": "^4.6.1",
+    "core-js": "^3.8.3",
+    "vue": "^2.6.14",
     "vue-flag-icon": "~1.0.6",
     "vue-i18n": "^8.27.1",
     "vue-material-design-icons": "~3.2.0",
-    "vue-router": "~3.0.6",
-    "vuex": "~3.1.1",
-    "vuex-persistedstate": "~2.5.4",
+    "vue-router": "^3.5.1",
+    "vuex": "^3.6.2",
+    "vuex-persistedstate": "^4.1.0",
     "zxcvbn": "~4.4.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.11",
-    "@vue/cli-plugin-eslint": "~4.5.11",
-    "@vue/cli-service": "~4.5.11",
-    "@vue/eslint-config-standard": "~4.0.0",
-    "babel-eslint": "~10.0.1",
-    "eslint": "~7.19.0",
-    "eslint-plugin-vue": "~7.5.0",
-    "node-sass": "~4.14.1",
-    "sass-loader": "~7.1.0",
-    "vue-template-compiler": "~2.6.10"
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@vue/cli-plugin-babel": "^5.0.4",
+    "@vue/cli-plugin-eslint": "^5.0.4",
+    "@vue/cli-service": "^5.0.4",
+    "@vue/eslint-config-standard": "^6.1.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "path-browserify": "^1.0.1",
+    "sass": "^1.32.7",
+    "sass-loader": "^12.0.0",
+    "vue-template-compiler": "^2.6.14"
   },
   "eslintConfig": {
     "root": true,
@@ -64,5 +63,12 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "copyright": "Copyright 2019 The James Hutton Institute",
+  "homepage": "https://ics.hutton.ac.uk/get-germinate",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/germinateplatform/gatekeeper-vue.git"
+  }
 }

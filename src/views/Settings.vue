@@ -74,22 +74,20 @@ export default {
       this.canContinue = this.$refs.passwordInput.valid()
     },
     onPasswordChanged: function () {
-      var vm = this
-
-      var password = this.$refs.passwordInput.getPassword()
-      var passwordConfirm = this.$refs.passwordInput.getPasswordConfirm()
-      var score = this.$refs.passwordInput.getScore()
+      const password = this.$refs.passwordInput.getPassword()
+      const passwordConfirm = this.$refs.passwordInput.getPasswordConfirm()
+      const score = this.$refs.passwordInput.getScore()
 
       if (password && passwordConfirm && password === passwordConfirm && score >= 2) {
-        var update = {
+        const update = {
           oldPassword: this.oldPassword,
           newPassword: password
         }
         EventBus.$emit('show-loading', true)
-        this.apiPatchUserPassword(this.token.id, update, function (result) {
+        this.apiPatchUserPassword(this.token.id, update, result => {
           EventBus.$emit('show-loading', false)
           if (result === true) {
-            vm.$bvToast.toast('Update successful.', {
+            this.$bvToast.toast('Update successful.', {
               title: 'Password',
               variant: 'success',
               autoHideDelay: 5000,
@@ -97,15 +95,15 @@ export default {
             })
 
             // Revoke the token and redirect to login
-            vm.$store.dispatch('ON_TOKEN_CHANGED', null)
-            vm.$router.push('/gk/login')
+            this.$store.dispatch('ON_TOKEN_CHANGED', null)
+            this.$router.push('/gk/login')
           }
         }, {
           codes: [401],
-          callback: function (err) {
+          callback: err => {
             EventBus.$emit('show-loading', false)
             if (err.status === 401) {
-              vm.$bvToast.toast('Update failed. Wrong password provided.', {
+              this.$bvToast.toast('Update failed. Wrong password provided.', {
                 title: 'Password',
                 variant: 'danger',
                 autoHideDelay: 5000,
@@ -119,19 +117,17 @@ export default {
       }
     },
     onEmailChanged: function () {
-      var vm = this
-
       if (this.email && this.email.length > 0) {
-        var update = {
+        const update = {
           oldEmail: this.token.email,
           newEmail: this.email
         }
 
-        this.apiPatchUserEmail(this.token.id, update, function (result) {
+        this.apiPatchUserEmail(this.token.id, update, result => {
           if (result === true) {
-            vm.$store.dispatch('ON_EMAIL_CHANGED', vm.email)
+            this.$store.dispatch('ON_EMAIL_CHANGED', this.email)
 
-            vm.$bvToast.toast('Update successful.', {
+            this.$bvToast.toast('Update successful.', {
               title: 'Email',
               variant: 'success',
               autoHideDelay: 5000,
@@ -145,9 +141,8 @@ export default {
   mounted: function () {
     this.email = this.token.email
 
-    var vm = this
-    this.apiGetUser(this.token.id, function (result) {
-      vm.user = result[0]
+    this.apiGetUser(this.token.id, result => {
+      this.user = result[0]
     })
   }
 }

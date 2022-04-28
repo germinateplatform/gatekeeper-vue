@@ -35,10 +35,7 @@ export default {
     onDatabaseSelected: function (database) {
       this.database = database
 
-      var vm = this
-      this.$nextTick(function () {
-        vm.$refs.permissionsTable.refresh()
-      })
+      this.$nextTick(() => this.$refs.permissionsTable.refresh())
     }
   }
 }

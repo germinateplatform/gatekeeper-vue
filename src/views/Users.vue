@@ -164,7 +164,7 @@ export default {
   },
   methods: {
     getInstitution: function () {
-      var result = ''
+      let result = ''
 
       if (this.user.name) {
         result += this.user.name
@@ -184,10 +184,7 @@ export default {
     onUserSelected: function (user) {
       this.user = user
 
-      var vm = this
-      this.$nextTick(function () {
-        vm.$refs.permissionsTable.refresh()
-      })
+      this.$nextTick(() => this.$refs.permissionsTable.refresh())
     },
     onGatekeeperAccessChanged: function (event) {
       this.apiPatchUserGatekeeperAccess(this.user.id, event)
@@ -201,8 +198,6 @@ export default {
       }
     },
     onDeleteUserClicked: function () {
-      var vm = this
-
       this.$bvModal.msgBoxConfirm(this.$t('modalMessageSure'), {
         okTitle: this.$t('genericYes'),
         okVariant: 'danger',
@@ -210,9 +205,9 @@ export default {
       })
         .then(value => {
           if (value) {
-            vm.apiDeleteUser(this.user.id, function (result) {
-              vm.user = null
-              vm.update()
+            this.apiDeleteUser(this.user.id, result => {
+              this.user = null
+              this.update()
             })
           }
         })
@@ -223,57 +218,54 @@ export default {
       EventBus.$emit('stats-count-changed')
     },
     onSubmitNewPermission: function () {
-      var vm = this
       if (this.newPermission.database && this.newPermission.server && this.newPermission.userType) {
-        var toSend = {
+        const toSend = {
           systemName: this.newPermission.database,
           serverName: this.newPermission.server,
           description: this.newPermission.description
         }
 
-        this.apiPostDatabase(toSend, function (result) {
+        this.apiPostDatabase(toSend, result => {
           if (result) {
-            var toSend = {
-              userId: vm.user.id,
+            const toSend = {
+              userId: this.user.id,
               databaseId: result,
-              userTypeId: vm.newPermission.userType
+              userTypeId: this.newPermission.userType
             }
 
             EventBus.$emit('stats-count-changed')
 
-            vm.apiPostUserPermission(toSend, function (result) {
-              vm.$refs.permissionsTable.refresh()
-              vm.resetNewPermission()
+            this.apiPostUserPermission(toSend, () => {
+              this.$refs.permissionsTable.refresh()
+              this.resetNewPermission()
             })
           }
         })
       }
     },
     onSubmitExistingPermission: function () {
-      var vm = this
       if (this.newPermission.database && this.newPermission.userType) {
-        var toSend = {
+        const toSend = {
           userId: this.user.id,
           databaseId: this.newPermission.database,
           userTypeId: this.newPermission.userType
         }
 
-        this.apiPostUserPermission(toSend, function (result) {
-          vm.resetNewPermission()
-          vm.$refs.permissionsTable.refresh()
+        this.apiPostUserPermission(toSend, result => {
+          this.resetNewPermission()
+          this.$refs.permissionsTable.refresh()
         })
       }
     }
   },
   mounted: function () {
-    var vm = this
-    this.apiGetDatabases({ page: 1, limit: this.MAX_JAVA_INTEGER }, function (result) {
+    this.apiGetDatabases({ page: 1, limit: this.MAX_JAVA_INTEGER }, result => {
       if (result && result.data) {
-        result.data.forEach(function (d) {
+        result.data.forEach(d => {
           d.text = d.serverName + ' -> ' + d.systemName
         })
 
-        vm.databases = result.data
+        this.databases = result.data
       }
     })
   }

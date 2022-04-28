@@ -62,25 +62,20 @@ export default {
   },
   methods: {
     getStats: function () {
-      var vm = this
-      this.apiGetStatCounts(function (result) {
-        vm.stats = result
+      this.apiGetStatCounts(result => {
+        this.stats = result
       }, {
         codes: [],
-        callback: function () {
-          vm.stats = null
+        callback: () => {
+          this.stats = null
         }
       })
     }
   },
   mounted: function () {
-    var vm = this
-
     this.getStats()
 
-    EventBus.$on('stats-count-changed', function (count) {
-      vm.getStats()
-    })
+    EventBus.$on('stats-count-changed', () => this.getStats())
   }
 }
 </script>

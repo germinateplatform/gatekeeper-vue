@@ -7,11 +7,11 @@
       <b-navbar-nav class="ml-auto mr-2">
         <b-nav-item :to="token ? '/about' : '/gk/about'">{{ $t('navbarActionAbout') }}</b-nav-item>
         <b-nav-item-dropdown text="Lang" right>
-          <template slot="button-content"><TranslateIcon class="form-icon" /></template>
+          <template slot="button-content"><MdiIcon :path="mdiTranslate" /></template>
           <b-dropdown-item v-for="language in languages" :key="language.locale" @click="onLocaleChanged(language)"><flag :squared="false" :iso="language.flag" class="flag-icon" /> {{ language.name }}</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-nav-item to="/" @click="signOut" :title="$t('navbarActionSignOut')" v-if="token">
-          <LogoutVariantIcon class="form-icon" :title="$t('navbarActionSignOut')" />
+          <MdiIcon :path="mdiLogoutVariant" />
         </b-nav-item>
       </b-navbar-nav>
     </b-navbar>
@@ -40,15 +40,18 @@
 </template>
 
 <script>
-import LogoutVariantIcon from 'vue-material-design-icons/LogoutVariant'
-import TranslateIcon from 'vue-material-design-icons/Translate'
+import MdiIcon from '@/components/MdiIcon'
 import { mapState } from 'vuex'
 import { EventBus } from './event-bus.js'
+
+import { mdiLogoutVariant, mdiTranslate } from '@mdi/js'
 
 export default {
   name: 'app',
   data: function () {
     return {
+      mdiLogoutVariant,
+      mdiTranslate,
       languages: [{
         locale: 'en_GB',
         flag: 'gb',
@@ -67,8 +70,7 @@ export default {
     ])
   },
   components: {
-    LogoutVariantIcon,
-    TranslateIcon
+    MdiIcon
   },
   methods: {
     onLocaleChanged: function (language) {
@@ -76,23 +78,20 @@ export default {
       this.$store.dispatch('ON_LOCALE_CHANGED', language.locale)
     },
     signOut: function () {
-      var vm = this
-
-      var user = {
+      const user = {
         email: this.token.username,
         password: this.token.token
       }
 
-      this.apiDeleteToken(user, function (result) {
-        console.log(result)
+      this.apiDeleteToken(user, result => {
         // If it's successful, delete token, then redirect
-        vm.$store.dispatch('ON_TOKEN_CHANGED', null)
-        vm.$router.push('/gk/login')
+        this.$store.dispatch('ON_TOKEN_CHANGED', null)
+        this.$router.push('/gk/login')
       }, {
         codes: [],
-        callback: function () {
+        callback: () => {
           // If they're wrong, remove
-          vm.$store.dispatch('ON_TOKEN_CHANGED', null)
+          this.$store.dispatch('ON_TOKEN_CHANGED', null)
         }
       })
     },
@@ -108,22 +107,60 @@ export default {
     EventBus.$off('show-loading', this.toggleLoading)
   },
   mounted: function () {
-    var vm = this
-
     EventBus.$on('show-loading', this.toggleLoading)
 
     if (this.locale) {
-      this.$i18n.locale = this.languages.map(function (l) {
-        return l.locale
-      }).filter(function (l) {
-        return vm.locale === l
-      })
+      this.$i18n.locale = this.languages.map(l => l.locale).filter(l => this.locale === l)
     }
   }
 }
 </script>
 
-<style>
+<style lang="scss">
+$font-size-base: 1rem;
+$primary: #23a1d7;
+$dark:    #36363b;
+$secondary: #bdc3c7;
+$success: #27ae60;
+$info:    #3498db;
+$warning: #f39c12;
+$danger:  #e74c3c;
+$indigo:  #6610f2;
+$purple:  #6f42c1;
+$pink:    #e83e8c;
+$red:     #dc3545;
+$orange:  #fd7e14;
+$yellow:  #ffc107;
+$green:   #28a745;
+$teal:    #20c997;
+$cyan:    #17a2b8;
+$headings-font-weight: 400;
+$badge-font-size: 85%;
+$small-font-size: 70%;
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1400px
+);
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1500px
+);
+
+@import '~bootswatch/dist/cosmo/variables';
+@import '~bootstrap/scss/bootstrap';
+@import '~bootstrap-vue/src/index.scss';
+@import '~bootswatch/dist/cosmo/bootswatch';
+@import '@/assets/css/custom.scss';
+
 #app {
   flex: 1 0 auto;
   min-height: calc(100vh - 37px);

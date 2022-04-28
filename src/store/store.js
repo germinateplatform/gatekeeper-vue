@@ -4,7 +4,7 @@ import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 
-var name = process.env.VUE_APP_INSTANCE_NAME
+let name = process.env.VUE_APP_INSTANCE_NAME
 
 if (!name) {
   name = 'gatekeeper-' + window.location.pathname

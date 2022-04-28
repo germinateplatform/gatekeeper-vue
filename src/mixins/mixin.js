@@ -32,9 +32,9 @@ export default {
      * @param {*} error The error response object
      */
     handleError (error) {
-      var variant = 'danger'
-      var title = this.$t('genericError')
-      var message = error.statusText
+      const variant = 'danger'
+      const title = this.$t('genericError')
+      let message = error.statusText
       switch (error.status) {
         case 400:
           message = this.$t('httpErrorFourOO')
@@ -83,9 +83,8 @@ export default {
       })
     },
     authAjax ({ url = null, method = 'GET', data = null, formData = null, dataType = 'json', contentType = 'application/json; charset=utf-8', success = null, error = { codes: [], callback: this.handleError } }) {
-      var vm = this
-      var requestData = null
-      var requestParams = null
+      let requestData = null
+      let requestParams = null
 
       // Stringify the data object for non-GET requests
       if (data !== null || data !== undefined) {
@@ -107,17 +106,17 @@ export default {
         withCredentials: true,
         headers: {
           'Content-Type': contentType,
-          'Authorization': 'Bearer ' + this.getToken()
+          Authorization: 'Bearer ' + this.getToken()
         }
       })
 
-      promise.then(function (result) {
-        var t = vm.$store.getters.token
+      promise.then(result => {
+        const t = this.$store.getters.token
 
         // Check if the token is still valid. Renew it if so.
         if (t && ((new Date().getTime() - new Date(t.createdOn).getTime()) <= t.lifetime)) {
           t.createdOn = new Date().getTime()
-          vm.$store.dispatch('ON_TOKEN_CHANGED', t)
+          this.$store.dispatch('ON_TOKEN_CHANGED', t)
         }
 
         if (success) {
@@ -125,12 +124,12 @@ export default {
         }
       })
 
-      promise.catch(function (err) {
+      promise.catch(err => {
         const textStatus = err.request.textStatus
         const jqXHR = err.response
 
         if (textStatus === 'timeout') {
-          vm.$bvToast.toast('Request to the server timed out.', {
+          this.$bvToast.toast('Request to the server timed out.', {
             title: 'Error',
             variant: 'danger',
             autoHideDelay: 5000,
@@ -142,8 +141,8 @@ export default {
         // Otherwise, we assume that the calling method takes care of the error
         if (!error) {
           if (jqXHR.status === 403) {
-            vm.$store.dispatch('ON_TOKEN_CHANGED', null)
-            vm.$router.push('/gk/login')
+            this.$store.dispatch('ON_TOKEN_CHANGED', null)
+            this.$router.push('/gk/login')
           } else if (process.env.NODE_ENV === 'development') {
             console.error(jqXHR)
           }
@@ -151,7 +150,7 @@ export default {
           if (error.codes.length === 0 || error.codes.includes(error.status)) {
             error.callback(jqXHR)
           } else {
-            vm.handleError(jqXHR)
+            this.handleError(jqXHR)
           }
         } else {
           console.error(jqXHR)
@@ -161,7 +160,7 @@ export default {
       return promise
     },
     getToken () {
-      var t = this.$store.getters.token
+      let t = this.$store.getters.token
 
       // Check if the token is still valid
       if (t && ((new Date().getTime() - new Date(t.createdOn).getTime()) > t.lifetime)) {

@@ -103,7 +103,7 @@ function hasQueryParams (route) {
 }
 
 // Routing logic
-var router = new VueRouter({
+const router = new VueRouter({
   routes: routes,
   mode: 'hash',
   linkExactActiveClass: 'active',

@@ -164,7 +164,7 @@ export default {
         this.$nextTick(() => this.$refs.feedbackModal.show())
       } else {
         EventBus.$emit('show-loading', true)
-        var decision = {
+        const decision = {
           requestId: this.currentRow.id,
           decision: 'REJECT',
           feedback: this.rejectionReason
@@ -188,7 +188,7 @@ export default {
     },
     onApprove: function (row) {
       EventBus.$emit('show-loading', true)
-      var decision = {
+      const decision = {
         requestId: row.id,
         decision: 'APPROVE'
       }

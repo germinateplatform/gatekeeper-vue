@@ -82,14 +82,11 @@ export default {
   },
   methods: {
     show () {
-      var vm = this
-      this.$nextTick(function () {
-        vm.$refs.addUserModal.show()
-      })
+      this.$nextTick(() => this.$refs.addUserModal.show())
     },
     updateInstitutions: function () {
       this.apiGetInstitutions(result => {
-        var mapped = result.data.map(i => {
+        const mapped = result.data.map(i => {
           return {
             value: i.id,
             text: i.name
@@ -104,7 +101,7 @@ export default {
       this.checkForm()
     },
     checkForm: function () {
-      var result = true
+      let result = true
       result = result && this.$refs.password.valid()
       result = result && this.user.fullName
       result = result && this.user.institutionId

@@ -8,7 +8,7 @@ import mixin from './mixins/mixin.js'
 import api from './mixins/api.js'
 import { i18n } from './plugins/i18n.js'
 import FlagIcon from 'vue-flag-icon'
-let axiosDefaults = require('axios/lib/defaults')
+const axiosDefaults = require('axios/lib/defaults')
 
 Vue.mixin(mixin)
 Vue.mixin(api)
@@ -16,7 +16,7 @@ Vue.use(FlagIcon)
 Vue.use(BootstrapVue)
 
 // Set base URL
-var baseUrl = './api/'
+let baseUrl = './api/'
 
 if (process.env.VUE_APP_BASE_URL) {
   baseUrl = process.env.VUE_APP_BASE_URL

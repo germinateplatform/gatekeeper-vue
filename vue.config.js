@@ -1,13 +1,15 @@
-const path = require("path");
-
 module.exports = {
   lintOnSave: true,
   runtimeCompiler: true,
   publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
-  pluginOptions: {
-    "style-resources-loader": {
-      preProcessor: "scss",
-      patterns: [path.resolve(__dirname, "./src/assets/css/custom.scss")]
-    }
+  configureWebpack: {
+    resolve: {
+      // ... rest of the resolve config
+      fallback: {
+        'path': require.resolve('path-browserify')
+      }
+    },
+    devtool: 'source-map',
+    target: 'web'
   }
 }

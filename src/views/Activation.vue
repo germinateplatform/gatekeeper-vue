@@ -42,21 +42,20 @@ export default {
     }
   },
   mounted: function () {
-    var vm = this
     this.activationKey = this.$route.query.activationKey
 
     if (this.activationKey) {
-      this.apiPostActivationRequest(this.activationKey, function (result) {
-        vm.decision = result
+      this.apiPostActivationRequest(this.activationKey, result => {
+        this.decision = result
       }, {
         codes: [],
-        callback: function (error) {
+        callback: error => {
           if (error.request && error.request.status === 404) {
-            vm.decision = 'NOT_FOUND'
+            this.decision = 'NOT_FOUND'
           } else if (error.request.response) {
-            vm.decision = error.request.response.description
+            this.decision = error.request.response.description
           } else {
-            vm.decision = 'UKNOWN_ERROR'
+            this.decision = 'UKNOWN_ERROR'
           }
         }
       })

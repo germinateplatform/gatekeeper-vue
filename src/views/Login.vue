@@ -112,26 +112,24 @@ export default {
       this.onPasswordReset()
     },
     checkCreds: function () {
-      var vm = this
-
       this.resetResponse()
 
-      this.apiPostToken(this.user, function (result) {
-        vm.error = false
+      this.apiPostToken(this.user, result => {
+        this.error = false
         // If it's successful, finally store them
-        vm.$store.dispatch('ON_TOKEN_CHANGED', result)
-        vm.$router.push('/')
+        this.$store.dispatch('ON_TOKEN_CHANGED', result)
+        this.$router.push('/')
       }, {
         codes: [],
-        callback: function (error) {
-          vm.error = true
+        callback: error => {
+          this.error = true
           if (error.status === 403 || error.status === 400) {
-            vm.response = vm.$t('errorMessageInvalidUsernamePassword')
+            this.response = this.$t('errorMessageInvalidUsernamePassword')
           } else {
-            vm.response = vm.$t('errorMessageServerUnavailable')
+            this.response = this.$t('errorMessageServerUnavailable')
           }
           // If they're wrong, remove
-          vm.$store.dispatch('ON_TOKEN_CHANGED', null)
+          this.$store.dispatch('ON_TOKEN_CHANGED', null)
         }
       })
     },

@@ -52,10 +52,7 @@ export default {
   },
   methods: {
     show () {
-      var vm = this
-      this.$nextTick(function () {
-        vm.$refs.addDatabaseModal.show()
-      })
+      this.$nextTick(() => this.$refs.addDatabaseModal.show())
     },
     onAddDatabaseClicked: function (event) {
       event.preventDefault()
@@ -66,11 +63,10 @@ export default {
       }
 
       // Send the new database to the server
-      var vm = this
-      this.apiPostDatabase(this.database, function (result) {
-        vm.$refs.addDatabaseModal.hide()
-        vm.$emit('databases-updated')
-        vm.resetDatabase()
+      this.apiPostDatabase(this.database, result => {
+        this.$refs.addDatabaseModal.hide()
+        this.$emit('databases-updated')
+        this.resetDatabase()
         EventBus.$emit('stats-count-changed')
       })
     },

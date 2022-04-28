@@ -42,10 +42,7 @@ export default {
   },
   methods: {
     show () {
-      var vm = this
-      this.$nextTick(function () {
-        vm.$refs.addInstitutionModal.show()
-      })
+      this.$nextTick(() => this.$refs.addInstitutionModal.show())
     },
     onAddInstitutionClicked: function (event) {
       event.preventDefault()
@@ -56,10 +53,9 @@ export default {
       }
 
       // Send the new institution to the server
-      var vm = this
-      this.apiPostInstitution(this.institution, function (result) {
-        vm.$refs.addInstitutionModal.hide()
-        vm.$emit('institutions-updated')
+      this.apiPostInstitution(this.institution, result => {
+        this.$refs.addInstitutionModal.hide()
+        this.$emit('institutions-updated')
       })
     }
   }
