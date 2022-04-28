@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-3">
     <b-row v-if="supportsSearch">
       <b-col cols=12 md=3>
         <b-form-group :label="$t('paginationFilterPlaceholder')" label-for="search">
