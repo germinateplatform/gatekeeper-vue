@@ -16,7 +16,7 @@ RUN apk add --no-cache git && \
 WORKDIR /opt/gatekeeper-client
 RUN rm -f .env && \
     echo "VUE_APP_BASE_URL=./api/" > .env && \
-    apk add --no-cache python build-base gcc wget && \
+    apk add --no-cache python3 build-base gcc wget && \
     npm i && \
     npm run build && \
     mkdir /opt/gatekeeper-server/client/ && \
