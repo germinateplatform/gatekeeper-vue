@@ -17,7 +17,7 @@ WORKDIR /opt/gatekeeper-client
 RUN rm -f .env && \
     echo "VUE_APP_BASE_URL=./api/" > .env && \
     apk add --no-cache python3 build-base gcc wget && \
-    npm i && \
+    npm i --legacy-peer-deps && \
     npm run build && \
     mkdir /opt/gatekeeper-server/client/ && \
     cp -a /opt/gatekeeper-client/dist/. /opt/gatekeeper-server/client/
