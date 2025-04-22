@@ -116,6 +116,7 @@
   "tableColumnInstituteAddress": "Institutsadresse",
   "tableColumnLastLogin": "Letzte Anmeldung",
   "tableColumnUserType": "Benutzertyp",
+  "tableColumnUserIsPrimary": "Ist primärer Kontakt",
   "tableColumnRequestsAccessTo": "Fragt nach Zugriff auf",
   "tableColumnRequestsActivationKey": "Email-Aktivierung",
   "tableColumnRequestsOnServer": "Auf Server",

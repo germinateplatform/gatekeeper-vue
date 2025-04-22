@@ -13,6 +13,14 @@
                   :options="userTypeOptions"
                   @change="setUserType(data.item, $event)" />
     </template>
+    <template #cell(userIsPrimaryContact)="data">
+      <b-form-checkbox
+        value="1"
+        unchecked-value="0"
+        switch
+        :checked="data.item.userIsPrimaryContact"
+        @change="setUserPrimary(data.item, $event)" />
+    </template>
   </BaseTable>
 </template>
 
@@ -66,6 +74,10 @@ export default {
         label: this.$t('tableColumnUserType'),
         sortable: true
       }, {
+        key: 'userIsPrimaryContact',
+        label: this.$t('tableColumnUserIsPrimary'),
+        sortable: true
+      }, {
         key: 'delete',
         label: this.$t('actionDelete'),
         sortable: false
@@ -82,6 +94,11 @@ export default {
     },
     refresh: function () {
       this.$refs.table.refresh()
+    },
+    setUserPrimary: function (row, newValue) {
+      const payload = JSON.parse(JSON.stringify(row))
+      payload.userIsPrimaryContact = newValue
+      this.apiPatchUserPermission(payload, () => this.refresh())
     },
     setUserType: function (row, newValue) {
       const payload = JSON.parse(JSON.stringify(row))

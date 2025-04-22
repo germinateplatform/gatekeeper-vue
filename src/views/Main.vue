@@ -7,7 +7,7 @@
             <template v-if="token && token.fullName">
               <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">{{ token.fullName }}</h6>
               <ul class="nav flex-column">
-                <b-nav-item to="/"><SettingsIcon class="mr-2" /><span>{{ $t('menuUserSettings') }}</span></b-nav-item>
+                <b-nav-item to="/"><CogIcon class="mr-2" /><span>{{ $t('menuUserSettings') }}</span></b-nav-item>
               </ul>
             </template>
             <template v-if="stats">
@@ -38,7 +38,7 @@
 import AccountGroupIcon from 'vue-material-design-icons/AccountGroup'
 import AccountQuestionIcon from 'vue-material-design-icons/AccountQuestion'
 import DatabaseIcon from 'vue-material-design-icons/Database'
-import SettingsIcon from 'vue-material-design-icons/Settings'
+import CogIcon from 'vue-material-design-icons/Cog'
 import { mapState } from 'vuex'
 import { EventBus } from '../event-bus.js'
 
@@ -53,7 +53,7 @@ export default {
     AccountGroupIcon,
     AccountQuestionIcon,
     DatabaseIcon,
-    SettingsIcon
+    CogIcon
   },
   computed: {
     ...mapState([

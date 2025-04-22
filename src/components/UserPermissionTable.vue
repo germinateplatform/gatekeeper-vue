@@ -1,17 +1,26 @@
 <template>
   <BaseTable :columns="columns" :getData="getData" ref="table">
-    <template v-slot:cell(delete)="data">
+    <template #cell(delete)="data">
       <b-button variant="danger"
               size="sm"
               @click="deleteUserPermission(data.item)">
         <MdiIcon :path="mdiDelete" />
       </b-button>
     </template>
-    <template v-slot:cell(userTypeId)="data">
+    <template #cell(userTypeId)="data">
       <b-form-select
-                  :value="data.item.userTypeId"
-                  :options="userTypeOptions"
-                  @change="setUserType(data.item, $event)" />
+        class="user-type-select"
+        :value="data.item.userTypeId"
+        :options="userTypeOptions"
+        @change="setUserType(data.item, $event)" />
+    </template>
+    <template #cell(userIsPrimaryContact)="data">
+      <b-form-checkbox
+        value="1"
+        unchecked-value="0"
+        switch
+        :checked="data.item.userIsPrimaryContact"
+        @change="setUserPrimary(data.item, $event)" />
     </template>
   </BaseTable>
 </template>
@@ -60,6 +69,10 @@ export default {
         label: this.$t('tableColumnUserType'),
         sortable: true
       }, {
+        key: 'userIsPrimaryContact',
+        label: this.$t('tableColumnUserIsPrimary'),
+        sortable: true
+      }, {
         key: 'delete',
         label: this.$t('actionDelete'),
         sortable: false
@@ -83,6 +96,11 @@ export default {
     refresh: function () {
       this.$refs.table.refresh()
     },
+    setUserPrimary: function (row, newValue) {
+      const payload = JSON.parse(JSON.stringify(row))
+      payload.userIsPrimaryContact = newValue
+      this.apiPatchUserPermission(payload, () => this.refresh())
+    },
     setUserType: function (row, newValue) {
       const payload = JSON.parse(JSON.stringify(row))
       payload.userTypeId = newValue
@@ -105,6 +123,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.user-type-select {
+  min-width: 100px;
+}
 </style>

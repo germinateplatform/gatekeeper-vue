@@ -70,6 +70,17 @@
                                    :options="userTypeOptions"
                                    required />
                   </b-input-group>
+                  <b-input-group class="mt-3">
+                    <b-input-group-prepend is-text>
+                      <CardAccountMailIcon class="form-icon" />
+                    </b-input-group-prepend>
+                    <b-form-checkbox v-model="newPermission.userIsPrimaryContact"
+                                     value="1"
+                                     unchecked-value="0"
+                                     class="form-control form-checkbox"
+                                     switch
+                                     required>{{ $t('tableColumnUserIsPrimary') }}</b-form-checkbox>
+                  </b-input-group>
                   <b-button type="submit" variant="primary" class="mt-3">{{ $t('actionAdd') }}</b-button>
                 </b-form>
               </b-tab>
@@ -106,6 +117,17 @@
                                    :options="userTypeOptions"
                                    required />
                   </b-input-group>
+                  <b-input-group class="mt-3">
+                    <b-input-group-prepend is-text>
+                      <CardAccountMailIcon class="form-icon" />
+                    </b-input-group-prepend>
+                    <b-form-checkbox v-model="newPermission.userIsPrimaryContact"
+                                     value="1"
+                                     unchecked-value="0"
+                                     class="form-control form-checkbox"
+                                     switch
+                                     required>{{ $t('tableColumnUserIsPrimary') }}</b-form-checkbox>
+                  </b-input-group>
                   <b-button type="submit" variant="primary" class="mt-3">{{ $t('actionAdd') }}</b-button>
                 </b-form>
               </b-tab>
@@ -119,6 +141,7 @@
 
 <script>
 import AccountStarIcon from 'vue-material-design-icons/AccountStar.vue'
+import CardAccountMailIcon from 'vue-material-design-icons/CardAccountMail.vue'
 import DatabaseIcon from 'vue-material-design-icons/Database.vue'
 import PencilIcon from 'vue-material-design-icons/Pencil.vue'
 import ServerIcon from 'vue-material-design-icons/Server.vue'
@@ -137,7 +160,8 @@ export default {
         database: null,
         server: null,
         description: null,
-        userType: 2
+        userType: 2,
+        userIsPrimaryContact: false
       },
       userTypeOptions: [{
         value: 1,
@@ -160,7 +184,8 @@ export default {
     PencilIcon,
     ServerIcon,
     UserTable,
-    UserPermissionTable
+    UserPermissionTable,
+    CardAccountMailIcon
   },
   methods: {
     getInstitution: function () {
@@ -194,7 +219,8 @@ export default {
         database: null,
         server: null,
         description: null,
-        userType: 2
+        userType: 2,
+        userIsPrimaryContact: false
       }
     },
     onDeleteUserClicked: function () {
@@ -230,7 +256,8 @@ export default {
             const toSend = {
               userId: this.user.id,
               databaseId: result,
-              userTypeId: this.newPermission.userType
+              userTypeId: this.newPermission.userType,
+              userIsPrimaryContact: this.newPermission.userIsPrimaryContact
             }
 
             EventBus.$emit('stats-count-changed')
@@ -248,7 +275,8 @@ export default {
         const toSend = {
           userId: this.user.id,
           databaseId: this.newPermission.database,
-          userTypeId: this.newPermission.userType
+          userTypeId: this.newPermission.userType,
+          userIsPrimaryContact: this.newPermission.userIsPrimaryContact
         }
 
         this.apiPostUserPermission(toSend, result => {
@@ -273,4 +301,7 @@ export default {
 </script>
 
 <style>
+.form-checkbox .custom-control-label {
+  margin-left: 0.5rem !important;
+}
 </style>
