@@ -161,7 +161,7 @@ export default {
         server: null,
         description: null,
         userType: 2,
-        userIsPrimaryContact: false
+        userIsPrimaryContact: '0'
       },
       userTypeOptions: [{
         value: 1,
@@ -220,7 +220,7 @@ export default {
         server: null,
         description: null,
         userType: 2,
-        userIsPrimaryContact: false
+        userIsPrimaryContact: '0'
       }
     },
     onDeleteUserClicked: function () {

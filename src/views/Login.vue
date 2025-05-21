@@ -120,8 +120,9 @@ export default {
         this.$store.dispatch('ON_TOKEN_CHANGED', result)
         this.$router.push('/')
       }, {
-        codes: [],
+        codes: [400, 403],
         callback: error => {
+          console.log('error', error)
           this.error = true
           if (error.status === 403 || error.status === 400) {
             this.response = this.$t('errorMessageInvalidUsernamePassword')
